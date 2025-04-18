@@ -7,25 +7,24 @@ import java.time.LocalDate;
  * @author Alvan
  */
 public class Employee {
-    private final PersonalInfo info;
+    private final PersonalInfo personal;
     
     private final LocalDate joinDate;
     private final boolean isForeigner;
     
-    private final Gender gender;; //Enum dari Gender.Java
+    private final Gender gender; //Enum dari Gender.Java
 
-    private int monthlySalary;
-    private int otherMonthlyIncome;
-    private int annualDeductible;
-
+    private SalaryInfo salary;
+    
     private FamilyInfo family;
     
-    public Employee(PersonalInfo info, LocalDate joinDate, boolean isForeigner, Gender gender) {
-        this.info = info;
+    public Employee(PersonalInfo personal, LocalDate joinDate, boolean isForeigner, Gender gender) {
+        this.personal = personal;
         this.joinDate = joinDate;
         this.isForeigner = isForeigner;
         this.gender = gender;
 
+        this.salary = new SalaryInfo();
         this.family = new FamilyInfo();
     }
 
@@ -36,30 +35,15 @@ public class Employee {
      * asing gaji bulanan diperbesar sebanyak 50%
      */
     public void setMonthlySalary(int grade) {
-        final int GRADE1 = 3000000;
-        final int GRADE2 = 5000000;
-        final int GRADE3 = 7000000;
-        final double FOREIGNER_MULTIPLIER = 1.5;
-        
-        int base = 0;
-        
-        switch (grade) {
-            case 1: base = GRADE1; break;
-            case 2: base = GRADE2; break;
-            case 3: base = GRADE3; break;
-            default: throw new IllegalArgumentException("Invalid grade");
-        }
-        this.monthlySalary = isForeigner
-            ? (int) Math.round(base * FOREIGNER_MULTIPLIER)
-            : base;
+        salary.setSalary(grade, isForeigner);
     }
 
     public void setAnnualDeductible(int deductible) {
-        this.annualDeductible = deductible;
+        salary.setAnnualDeductible(deductible);
     }
 
     public void setAdditionalIncome(int income) {
-        this.otherMonthlyIncome = income;
+        salary.setOtherMonthlyIncome(income);
     }
 
     public void setSpouse(String spouseName, String spouseIdNumber) {
@@ -82,10 +66,10 @@ public class Employee {
     public int getAnnualIncomeTax() {
         int monthsWorked = calculateMonthsWorkedThisYear();
         TaxProfile profile = new TaxProfile(
-            monthlySalary,
-            otherMonthlyIncome,
+            salary.getMonthlySalary(),
+            salary.getOtherMonthlyIncome(),
             monthsWorked,
-            annualDeductible,
+            salary.getAnnualDeductible(),
             family.hasSpouse(),
             family.getNumberOfChildren()
         );
