@@ -1,9 +1,6 @@
 package taxcalculator;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  *
@@ -11,28 +8,25 @@ import java.util.List;
  */
 public class Employee {
     private final PersonalInfo info;
+    
     private final LocalDate joinDate;
     private final boolean isForeigner;
+    
     private final Gender gender;; //Enum dari Gender.Java
 
     private int monthlySalary;
     private int otherMonthlyIncome;
     private int annualDeductible;
 
-    private String spouseName;
-    private String spouseIdNumber;
-
-    private final List<String> childNames;
-    private final List<String> childIdNumbers;
-
+    private FamilyInfo family;
+    
     public Employee(PersonalInfo info, LocalDate joinDate, boolean isForeigner, Gender gender) {
         this.info = info;
         this.joinDate = joinDate;
         this.isForeigner = isForeigner;
         this.gender = gender;
 
-        childNames = new LinkedList<String>();
-        childIdNumbers = new LinkedList<String>();
+        this.family = new FamilyInfo();
     }
 
     /**
@@ -69,13 +63,11 @@ public class Employee {
     }
 
     public void setSpouse(String spouseName, String spouseIdNumber) {
-        this.spouseName = spouseName;
-        this.spouseIdNumber = spouseIdNumber;
+        family.setSpouse(new SpouseInfo(spouseName, spouseIdNumber));
     }
 
     public void addChild(String childName, String childIdNumber) {
-        childNames.add(childName);
-        childIdNumbers.add(childIdNumber);
+        family.addChild(new ChildInfo(childName, childIdNumber));
     }
     
     private int calculateMonthsWorkedThisYear() {
@@ -94,8 +86,8 @@ public class Employee {
             otherMonthlyIncome,
             monthsWorked,
             annualDeductible,
-            spouseIdNumber.equals(""),
-            childIdNumbers.size()
+            family.hasSpouse(),
+            family.getNumberOfChildren()
         );
         return TaxFunction.calculateTax(profile);
     }
