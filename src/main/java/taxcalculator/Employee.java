@@ -91,7 +91,15 @@ public class Employee {
     }
 
     public int getAnnualIncomeTax() {
-        monthWorkingInYear = calculateMonthsWorkedThisYear();
-        return TaxFunction.calculateTax(monthlySalary, otherMonthlyIncome, monthWorkingInYear, annualDeductible, spouseIdNumber.equals(""), childIdNumbers.size());
+        int monthsWorked = calculateMonthsWorkedThisYear();
+        TaxProfile profile = new TaxProfile(
+            monthlySalary,
+            otherMonthlyIncome,
+            monthsWorked,
+            annualDeductible,
+            spouseIdNumber.equals(""),
+            childIdNumbers.size()
+        );
+        return TaxFunction.calculateTax(profile);
     }
 }
