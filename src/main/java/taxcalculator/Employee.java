@@ -11,12 +11,9 @@ import java.util.List;
  */
 public class Employee {
     private final PersonalInfo info;
-
-    private LocalDate joinDate;
-    private int monthWorkingInYear;
-
-    private boolean isForeigner;
-    private Gender gender; //Enum dari Gender.Java
+    private final LocalDate joinDate;
+    private final boolean isForeigner;
+    private final Gender gender;; //Enum dari Gender.Java
 
     private int monthlySalary;
     private int otherMonthlyIncome;
@@ -25,8 +22,8 @@ public class Employee {
     private String spouseName;
     private String spouseIdNumber;
 
-    private List<String> childNames;
-    private List<String> childIdNumbers;
+    private final List<String> childNames;
+    private final List<String> childIdNumbers;
 
     public Employee(PersonalInfo info, LocalDate joinDate, boolean isForeigner, Gender gender) {
         this.info = info;
@@ -91,7 +88,15 @@ public class Employee {
     }
 
     public int getAnnualIncomeTax() {
-        monthWorkingInYear = calculateMonthsWorkedThisYear();
-        return TaxFunction.calculateTax(monthlySalary, otherMonthlyIncome, monthWorkingInYear, annualDeductible, spouseIdNumber.equals(""), childIdNumbers.size());
+        int monthsWorked = calculateMonthsWorkedThisYear();
+        TaxProfile profile = new TaxProfile(
+            monthlySalary,
+            otherMonthlyIncome,
+            monthsWorked,
+            annualDeductible,
+            spouseIdNumber.equals(""),
+            childIdNumbers.size()
+        );
+        return TaxFunction.calculateTax(profile);
     }
 }
