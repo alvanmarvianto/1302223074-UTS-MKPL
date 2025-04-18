@@ -32,30 +32,36 @@ public class TaxFunction {
     private static final int CHILD_EXEMPTION = 1_500_000;
     private static final int MAX_CHILDREN = 3;
     private static final double TAX_RATE = 0.05;
+    
+    /**
+     * Menghitung pendapatan tahunan dari gaji bulanan dan pendapatan lainnya.
+     */
+    private static int computeAnnualIncome(int monthlySalary,
+                                           int otherIncome,
+                                           int monthsWorking) {
+        return (monthlySalary + otherIncome) * monthsWorking;
+    }
+    
+    /**
+     * Menghitung total tunjangan bebas pajak dari status nikah dan jumlah anak.
+     */
+    private static int calculateNonTaxableIncome(boolean married, int children) {
+        int exemption = BASE_EXEMPTION;
+        if (married) {
+            exemption += SPOUSE_EXEMPTION;
+        }
+        exemption += CHILD_EXEMPTION * children;
+        return exemption;
+    }
 
+    /**
+     * return pajak atau 0 jika ada kesalahan
+     */
     public static int calculateTax(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, boolean isMarried, int numberOfChildren) {
-
-        int tax = 0;
-
-        if (numberOfMonthWorking > 12) {
-            System.err.println("More than 12 month working per year");
-        }
-
-        if (numberOfChildren > MAX_CHILDREN) {
-            numberOfChildren = 3;
-        }
-
-        if (isMarried) {
-            tax = (int) Math.round(TAX_RATE * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - (BASE_EXEMPTION + SPOUSE_EXEMPTION + (numberOfChildren * 1500000))));
-        } else {
-            tax = (int) Math.round(TAX_RATE * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - BASE_EXEMPTION));
-        }
-
-        if (tax < 0) {
-            return 0;
-        } else {
-            return tax;
-        }
-
+        int grossIncome = computeAnnualIncome(monthlySalary, otherMonthlyIncome, numberOfMonthWorking);
+        int nonTaxable = calculateNonTaxableIncome(isMarried, numberOfChildren);
+        int taxableBase   = grossIncome - deductible - nonTaxable;
+        int rawTax        = (int) Math.round(TAX_RATE * taxableBase);
+        return Math.max(rawTax, 0);
     }
 }
