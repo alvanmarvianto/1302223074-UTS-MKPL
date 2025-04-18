@@ -58,22 +58,18 @@ public class Employee {
         final int GRADE2 = 5000000;
         final int GRADE3 = 7000000;
         final double FOREIGNER_MULTIPLIER = 1.5;
-        if (grade == 1) {
-            monthlySalary = GRADE1;
-            if (isForeigner) {
-                monthlySalary = (int) (GRADE1 * FOREIGNER_MULTIPLIER);
-            }
-        } else if (grade == 2) {
-            monthlySalary = GRADE2;
-            if (isForeigner) {
-                monthlySalary = (int) (GRADE2 * FOREIGNER_MULTIPLIER);
-            }
-        } else if (grade == 3) {
-            monthlySalary = GRADE3;
-            if (isForeigner) {
-                monthlySalary = (int) (GRADE3 * FOREIGNER_MULTIPLIER);
-            }
+        
+        int base = 0;
+        
+        switch (grade) {
+            case 1: base = GRADE1; break;
+            case 2: base = GRADE2; break;
+            case 3: base = GRADE3; break;
+            default: throw new IllegalArgumentException("Invalid grade");
         }
+        this.monthlySalary = isForeigner
+            ? (int) Math.round(base * FOREIGNER_MULTIPLIER)
+            : base;
     }
 
     public void setAnnualDeductible(int deductible) {
