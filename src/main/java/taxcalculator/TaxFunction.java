@@ -58,6 +58,13 @@ public class TaxFunction {
      * return pajak atau 0 jika ada kesalahan
      */
     public static int calculateTax(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, boolean isMarried, int numberOfChildren) {
+        // Guard Clauses
+        if (numberOfMonthWorking > 12) {
+            System.err.println("More than 12 months in a year!");
+            return 0;
+        }
+        numberOfChildren = Math.min(numberOfChildren, MAX_CHILDREN);
+        
         int grossIncome = computeAnnualIncome(monthlySalary, otherMonthlyIncome, numberOfMonthWorking);
         int nonTaxable = calculateNonTaxableIncome(isMarried, numberOfChildren);
         int taxableBase   = grossIncome - deductible - nonTaxable;
