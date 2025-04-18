@@ -25,6 +25,13 @@ public class TaxFunction {
      * sebesar Rp 4.500.000 per anak sampai anak ketiga.
      *
      */
+    
+    // Constant untuk exemptions & limits
+    private static final int BASE_EXEMPTION = 54_000_000;
+    private static final int SPOUSE_EXEMPTION = 4_500_000;
+    private static final int CHILD_EXEMPTION = 1_500_000;
+    private static final int MAX_CHILDREN = 3;
+    private static final double TAX_RATE = 0.05;
 
     public static int calculateTax(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, boolean isMarried, int numberOfChildren) {
 
@@ -34,14 +41,14 @@ public class TaxFunction {
             System.err.println("More than 12 month working per year");
         }
 
-        if (numberOfChildren > 3) {
+        if (numberOfChildren > MAX_CHILDREN) {
             numberOfChildren = 3;
         }
 
         if (isMarried) {
-            tax = (int) Math.round(0.05 * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - (54000000 + 4500000 + (numberOfChildren * 1500000))));
+            tax = (int) Math.round(TAX_RATE * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - (BASE_EXEMPTION + SPOUSE_EXEMPTION + (numberOfChildren * 1500000))));
         } else {
-            tax = (int) Math.round(0.05 * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - 54000000));
+            tax = (int) Math.round(TAX_RATE * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - BASE_EXEMPTION));
         }
 
         if (tax < 0) {
