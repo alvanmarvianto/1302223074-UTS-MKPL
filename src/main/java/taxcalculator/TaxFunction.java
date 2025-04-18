@@ -27,11 +27,11 @@ public class TaxFunction {
      */
     
     // Constant untuk exemptions & limits
-    private static final int BASE_EXEMPTION = 54_000_000;
-    private static final int SPOUSE_EXEMPTION = 4_500_000;
-    private static final int CHILD_EXEMPTION = 1_500_000;
-    private static final int MAX_CHILDREN = 3;
-    private static final double TAX_RATE = 0.05;
+    public static final int BASE_EXEMPTION = 54_000_000;
+    public static final int SPOUSE_EXEMPTION = 4_500_000;
+    public static final int CHILD_EXEMPTION = 1_500_000;
+    public static final int MAX_CHILDREN = 3;
+    public static final double TAX_RATE = 0.05;
     
     /**
      * Menghitung pendapatan tahunan dari gaji bulanan dan pendapatan lainnya.
@@ -57,17 +57,21 @@ public class TaxFunction {
     /**
      * return pajak atau 0 jika ada kesalahan
      */
-    public static int calculateTax(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, boolean isMarried, int numberOfChildren) {
+    public static int calculateTax(TaxProfile profile) {
         // Guard Clauses
-        if (numberOfMonthWorking > 12) {
-            System.err.println("More than 12 months in a year!");
+        if (profile.getMonthsWorking() > 12 || profile.getMonthsWorking() < 0) {
+            System.err.println("Error: monthsWorking must be between 0 and 12");
             return 0;
         }
-        numberOfChildren = Math.min(numberOfChildren, MAX_CHILDREN);
-        
-        int grossIncome = computeAnnualIncome(monthlySalary, otherMonthlyIncome, numberOfMonthWorking);
-        int nonTaxable = calculateNonTaxableIncome(isMarried, numberOfChildren);
-        int taxableBase   = grossIncome - deductible - nonTaxable;
+
+        int grossIncome   = computeAnnualIncome(
+                                profile.getMonthlySalary(),
+                                profile.getOtherMonthlyIncome(),
+                                profile.getMonthsWorking());
+        int nonTaxable    = calculateNonTaxableIncome(
+                                profile.isMarried(),
+                                profile.getChildren());
+        int taxableBase   = grossIncome - profile.getDeductible() - nonTaxable;
         int rawTax        = (int) Math.round(TAX_RATE * taxableBase);
         return Math.max(rawTax, 0);
     }
