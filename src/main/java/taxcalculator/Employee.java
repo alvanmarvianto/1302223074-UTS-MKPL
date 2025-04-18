@@ -54,20 +54,24 @@ public class Employee {
      * asing gaji bulanan diperbesar sebanyak 50%
      */
     public void setMonthlySalary(int grade) {
+        final int GRADE1 = 3000000;
+        final int GRADE2 = 5000000;
+        final int GRADE3 = 7000000;
+        final double FOREIGNER_MULTIPLIER = 1.5;
         if (grade == 1) {
-            monthlySalary = 3000000;
+            monthlySalary = GRADE1;
             if (isForeigner) {
-                monthlySalary = (int) (3000000 * 1.5);
+                monthlySalary = (int) (GRADE1 * FOREIGNER_MULTIPLIER);
             }
         } else if (grade == 2) {
-            monthlySalary = 5000000;
+            monthlySalary = GRADE2;
             if (isForeigner) {
-                monthlySalary = (int) (3000000 * 1.5);
+                monthlySalary = (int) (GRADE2 * FOREIGNER_MULTIPLIER);
             }
         } else if (grade == 3) {
-            monthlySalary = 7000000;
+            monthlySalary = GRADE3;
             if (isForeigner) {
-                monthlySalary = (int) (3000000 * 1.5);
+                monthlySalary = (int) (GRADE3 * FOREIGNER_MULTIPLIER);
             }
         }
     }
