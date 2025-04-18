@@ -65,7 +65,7 @@ public class Employee {
             case 1: base = GRADE1; break;
             case 2: base = GRADE2; break;
             case 3: base = GRADE3; break;
-            default: break;
+            default: throw new IllegalArgumentException("Invalid grade");
         }
         this.monthlySalary = isForeigner
             ? (int) Math.round(base * FOREIGNER_MULTIPLIER)
